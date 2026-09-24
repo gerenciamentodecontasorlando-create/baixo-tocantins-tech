@@ -11,10 +11,13 @@
     <!-- FontAwesome 6 CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- Google Fonts: Plus Jakarta Sans & Space Grotesk -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
         tailwind.config = {
@@ -49,7 +52,6 @@
     </script>
 
     <style>
-        /* Custom Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -69,15 +71,6 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(212, 175, 55, 0.18);
-        }
-
-        .glass-panel-hover:hover {
-            border-color: rgba(212, 175, 55, 0.45);
-            box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.2);
-        }
-
-        .gold-glow {
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
         }
 
         .emerald-glow {
@@ -133,7 +126,7 @@
                 </div>
             </a>
 
-            <!-- Desktop Navigation -->
+            <!-- Navigation Links -->
             <nav class="hidden md:flex items-center gap-7 text-sm font-medium">
                 <a href="#inicio" class="text-emerald-400 hover:text-gold-400 transition-colors">Início</a>
                 <a href="#sobre" class="text-slate-300 hover:text-gold-400 transition-colors">Sobre</a>
@@ -143,21 +136,21 @@
                 <a href="#contato" class="text-slate-300 hover:text-gold-400 transition-colors">Contato</a>
             </nav>
 
-            <!-- Admin Button / Actions -->
+            <!-- Admin Button -->
             <div class="hidden md:flex items-center gap-3">
-                <button id="adminNavBtn" onclick="handleAdminNavClick()" class="px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border bg-amazon-900 border-gold-500/40 text-gold-400 hover:bg-gold-500 hover:text-amazon-950">
+                <button onclick="handleAdminNavClick()" class="px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border bg-amazon-900 border-gold-500/40 text-gold-400 hover:bg-gold-500 hover:text-amazon-950">
                     <i class="fa-solid fa-user-shield"></i>
                     <span id="adminNavText">Área Admin</span>
                 </button>
             </div>
 
-            <!-- Mobile Menu Toggle -->
+            <!-- Mobile Menu Button -->
             <button id="mobileMenuBtn" class="md:hidden text-2xl text-slate-300 hover:text-gold-400 focus:outline-none p-2">
                 <i class="fa-solid fa-bars" id="menuIcon"></i>
             </button>
         </div>
 
-        <!-- Mobile Menu Dropdown -->
+        <!-- Mobile Dropdown -->
         <div id="mobileMenu" class="hidden md:hidden glass-panel border-t border-amazon-700/50 px-6 py-6 space-y-4">
             <a href="#inicio" class="block text-emerald-400 font-medium hover:text-gold-400 mobile-link">Início</a>
             <a href="#sobre" class="block text-slate-300 font-medium hover:text-gold-400 mobile-link">Sobre a Startup</a>
@@ -173,14 +166,9 @@
 
     <!-- HERO SECTION -->
     <section id="inicio" class="relative pt-32 pb-20 md:pt-40 md:pb-32 hero-bg overflow-hidden">
-        <!-- Ambient Glowing Orbs -->
-        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[130px] pointer-events-none"></div>
-        <div class="absolute top-10 right-10 w-[350px] h-[350px] bg-gold-500/10 rounded-full blur-[100px] pointer-events-none"></div>
-
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 
-                <!-- Hero Text Left -->
                 <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
                     <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel border border-gold-500/40 text-xs sm:text-sm font-semibold text-gold-400 shadow-lg">
                         <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -195,19 +183,15 @@
                         Startup sem fins lucrativos gerando prosperidade no Pará, nascida em <strong class="text-emerald-400">Abaetetuba</strong> na região do Baixo Tocantins. Desenvolvemos soluções em software para saúde, estudos personalizados, políticas públicas e pesquisas científicas.
                     </p>
 
-                    <!-- CTAs -->
                     <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
-                        <a href="#softwares" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-base shadow-lg shadow-emerald-900/50 hover:shadow-emerald-500/30 transition-all flex items-center justify-center gap-3">
-                            <i class="fa-solid fa-laptop-code text-gold-300"></i>
-                            Conhecer Softwares
+                        <a href="#softwares" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-base shadow-lg transition-all flex items-center justify-center gap-3">
+                            <i class="fa-solid fa-laptop-code text-gold-300"></i> Conhecer Softwares
                         </a>
-                        <a href="https://wa.me/5591980453158?text=Ol%C3%A1!%20Gostaria%20de%20saber%20mais%20sobre%20os%20projetos%20da%20BTX%20Tech%20G." target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-whatsapp hover:bg-emerald-500 text-slate-950 font-bold text-base shadow-lg shadow-whatsapp/20 transition-all flex items-center justify-center gap-3">
-                            <i class="fa-brands fa-whatsapp text-xl"></i>
-                            Conversar no WhatsApp
+                        <a href="https://wa.me/5591980453158?text=Ol%C3%A1!%20Gostaria%20de%20saber%20mais%20sobre%20os%20projetos%20da%20BTX%20Tech%20G." target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-whatsapp hover:bg-emerald-500 text-slate-950 font-bold text-base shadow-lg transition-all flex items-center justify-center gap-3">
+                            <i class="fa-brands fa-whatsapp text-xl"></i> Conversar no WhatsApp
                         </a>
                     </div>
 
-                    <!-- Regional Badges -->
                     <div class="pt-8 border-t border-amazon-700/50 grid grid-cols-2 sm:grid-cols-3 gap-4 text-left">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-xl bg-amazon-850 flex items-center justify-center border border-emerald-600/30 text-gold-400">
@@ -239,16 +223,14 @@
                     </div>
                 </div>
 
-                <!-- Hero Founder Photo & Bio-Tech Emblem Right -->
+                <!-- Foto do Fundador -->
                 <div class="lg:col-span-5 relative flex flex-col items-center">
                     <div class="relative w-full max-w-md p-6 rounded-3xl glass-panel border border-gold-500/30 shadow-2xl text-center group">
                         
-                        <!-- Founder Photo Frame -->
                         <div class="relative w-56 h-56 sm:w-64 sm:h-64 mx-auto mb-6 rounded-full bg-gradient-to-tr from-gold-500 via-emerald-500 to-amber-300 p-1.5 shadow-2xl emerald-glow pulse-slow">
                             <div class="w-full h-full bg-amazon-950 rounded-full overflow-hidden relative border-2 border-gold-400/40">
-                                <img src="1000454253.jpg" alt="Liderança BTX Tech G" onerror="this.onerror=null; this.src='https://placehold.co/400x400/0a3123/f5cd56?text=BTX+Tech+G';" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                                <img src="1000454253.png" alt="Liderança BTX Tech G" onerror="this.onerror=null; this.src='1000454253.jpg';" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
                             </div>
-                            <!-- Bio-Tech Badge Overlay -->
                             <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-amazon-950 border border-gold-400 text-[11px] font-bold text-gold-400 shadow-md uppercase tracking-wider flex items-center gap-1.5">
                                 <i class="fa-solid fa-dna text-emerald-400"></i> BTX COMPANY
                             </div>
@@ -264,7 +246,6 @@
                             Especialistas dedicados à união entre ciência da computação, dados públicos e resoluções para demandas da saúde, educação e sociedade paraense.
                         </p>
 
-                        <!-- Quick Social Link -->
                         <a href="https://wa.me/5591980453158" target="_blank" class="inline-flex items-center gap-2 text-xs font-bold text-gold-400 hover:text-gold-300 transition-colors">
                             <i class="fa-solid fa-envelope"></i> Falar com a Liderança
                         </a>
@@ -275,7 +256,7 @@
         </div>
     </section>
 
-    <!-- SOBRE / ORIGEM & IMPACTO REGIONAL -->
+    <!-- SOBRE / ABAETETUBA -->
     <section id="sobre" class="py-20 bg-amazon-900/60 border-y border-amazon-700/40 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -311,7 +292,7 @@
                     </div>
                 </div>
 
-                <!-- Interactive Impact Counters -->
+                <!-- Indicadores -->
                 <div id="impacto" class="lg:col-span-6">
                     <div class="p-8 rounded-3xl glass-panel border border-gold-500/30 space-y-6">
                         <h3 class="font-heading font-bold text-xl text-slate-100 border-b border-amazon-700/60 pb-4">
@@ -356,7 +337,7 @@
         </div>
     </section>
 
-    <!-- PROJETOS & SOFTWARES (Filterable & Manageable) -->
+    <!-- PROJETOS & SOFTWARES -->
     <section id="softwares" class="py-20 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
@@ -368,7 +349,7 @@
                     </h2>
                 </div>
 
-                <!-- Category Filters -->
+                <!-- Filtros -->
                 <div class="flex flex-wrap gap-2" id="softwareFilterGroup">
                     <button onclick="filterSoftwares('Todos')" class="soft-filter-btn active px-4 py-2 rounded-lg text-xs font-bold bg-gold-500 text-amazon-950 transition-all">
                         Todos
@@ -385,15 +366,14 @@
                 </div>
             </div>
 
-            <!-- Softwares Container Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="softwaresContainer">
-                <!-- Rendered dynamically by JavaScript -->
+                <!-- Renderizado via JS -->
             </div>
 
         </div>
     </section>
 
-    <!-- ARTIGOS CIENTÍFICOS & PESQUISAS -->
+    <!-- ARTIGOS CIENTÍFICOS -->
     <section id="artigos" class="py-20 bg-amazon-900/40 border-y border-amazon-700/40 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="max-w-3xl mx-auto text-center mb-16 space-y-3">
@@ -406,14 +386,13 @@
                 </p>
             </div>
 
-            <!-- Articles Container Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="artigosContainer">
-                <!-- Rendered dynamically by JavaScript -->
+                <!-- Renderizado via JS -->
             </div>
         </div>
     </section>
 
-    <!-- DEMONSTRATIVO DE TECNOLOGIAS BTX (Simulador Interativo) -->
+    <!-- SIMULADOR INTERATIVO DE ESTUDOS -->
     <section class="py-16 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="p-8 sm:p-12 rounded-3xl glass-panel border border-gold-500/30">
@@ -430,7 +409,6 @@
                             Ajuste suas horas de estudo diárias e veja a recomendação do algoritmo inteligente da BTX para potencializar a aprovação em exames do Pará.
                         </p>
 
-                        <!-- Controls -->
                         <div class="space-y-4 pt-2">
                             <div>
                                 <label class="text-xs text-slate-300 font-bold block mb-1">Selecione a Área Alvo:</label>
@@ -457,7 +435,6 @@
                         </div>
                     </div>
 
-                    <!-- Result Panel -->
                     <div class="lg:col-span-6">
                         <div class="p-6 rounded-2xl bg-amazon-950 border border-amazon-700/60 font-mono text-xs space-y-4">
                             <div class="flex items-center justify-between pb-3 border-b border-amazon-800">
@@ -481,12 +458,11 @@
         </div>
     </section>
 
-    <!-- CONTATO & LOCALIZAÇÃO -->
+    <!-- CONTATO -->
     <section id="contato" class="py-20 bg-amazon-900/60 border-t border-amazon-700/40 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
                 
-                <!-- Info Column -->
                 <div class="lg:col-span-5 space-y-6">
                     <div>
                         <span class="text-xs font-bold uppercase tracking-widest text-gold-400 block mb-1">Fale Conosco</span>
@@ -499,7 +475,6 @@
                         Estamos abertos para parcerias institucionais, cooperação de pesquisadores, suporte e doações para a manutenção das nossas iniciativas sem fins lucrativos no Pará.
                     </p>
 
-                    <!-- Contact Details Cards -->
                     <div class="space-y-4 pt-2">
                         <a href="mailto:btxsuportg@gmail.com" class="p-4 rounded-2xl glass-panel border border-emerald-700/30 flex items-center gap-4 hover:border-gold-500/50 transition-all group">
                             <div class="w-11 h-11 rounded-xl bg-amazon-850 flex items-center justify-center text-gold-400 text-xl shrink-0 group-hover:scale-110 transition-transform">
@@ -532,18 +507,16 @@
                         </div>
                     </div>
 
-                    <!-- Direct Large WhatsApp Button -->
                     <a href="https://wa.me/5591980453158?text=Ol%C3%A1!%20Gostaria%20de%20saber%20mais%20sobre%20os%20projetos%20da%20BTX%20Tech%20G." target="_blank" class="w-full py-4 rounded-2xl bg-whatsapp hover:bg-emerald-500 text-slate-950 font-extrabold text-sm shadow-xl transition-all flex items-center justify-center gap-3">
-                        <i class="fa-brands fa-whatsapp text-2xl"></i>
-                        Iniciar Conversa no WhatsApp
+                        <i class="fa-brands fa-whatsapp text-2xl"></i> Iniciar Conversa no WhatsApp
                     </a>
                 </div>
 
-                <!-- Form Column -->
+                <!-- Formulário de Mensagem Direta -->
                 <div class="lg:col-span-7">
                     <form id="publicContactForm" onsubmit="handlePublicContactSubmit(event)" class="p-8 rounded-3xl glass-panel border border-gold-500/30 space-y-4">
                         <h4 class="font-heading font-bold text-xl text-slate-100">Enviar Mensagem Direta</h4>
-                        <p class="text-xs text-slate-300">As mensagens enviadas por aqui ficam salvas com segurança no painel do administrador da BTX Tech G.</p>
+                        <p class="text-xs text-slate-300">As mensagens enviadas por aqui ficam salvas com segurança no painel do administrador e Supabase.</p>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                             <div>
@@ -627,7 +600,7 @@
         </div>
     </footer>
 
-    <!-- MODAL 1: LOGIN DO ADMINISTRADOR -->
+    <!-- MODAL 1: LOGIN -->
     <div id="loginModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
         <div class="glass-panel border border-gold-500/40 rounded-3xl max-w-md w-full p-6 sm:p-8 relative">
             <button onclick="closeModal('loginModal')" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-amazon-950 text-slate-400 hover:text-gold-400 flex items-center justify-center border border-amazon-700">
@@ -664,11 +637,10 @@
         </div>
     </div>
 
-    <!-- MODAL 2: PAINEL DASHBOARD DO ADMINISTRADOR (SISTEMA DE GESTÃO COMPLETO) -->
+    <!-- MODAL 2: PAINEL DASHBOARD -->
     <div id="adminDashboardModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
         <div class="glass-panel border border-gold-500/40 rounded-3xl max-w-5xl w-full max-h-[90vh] flex flex-col relative overflow-hidden">
             
-            <!-- Dashboard Header -->
             <div class="p-6 border-b border-amazon-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-amazon-950/80">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-gold-500/20 border border-gold-500/50 flex items-center justify-center text-gold-400">
@@ -690,7 +662,6 @@
                 </div>
             </div>
 
-            <!-- Dashboard Navigation Tabs -->
             <div class="flex border-b border-amazon-700/60 bg-amazon-900/50 px-6 pt-2 gap-2 overflow-x-auto">
                 <button onclick="switchAdminTab('messagesTab')" id="tabBtnMessages" class="admin-tab-btn active px-4 py-3 text-xs font-bold border-b-2 border-gold-400 text-gold-400 transition-colors flex items-center gap-2 whitespace-nowrap">
                     <i class="fa-solid fa-inbox"></i> Mensagens Recebidas <span id="unreadBadge" class="px-2 py-0.5 rounded-full bg-emerald-500 text-amazon-950 text-[10px]">0</span>
@@ -703,22 +674,19 @@
                 </button>
             </div>
 
-            <!-- Dashboard Content Body -->
             <div class="p-6 overflow-y-auto flex-1 space-y-6">
                 
-                <!-- TAB 1: MENSAGENS RECEBIDAS -->
+                <!-- TAB 1: MENSAGENS -->
                 <div id="messagesTab" class="admin-tab-content space-y-4">
                     <div class="flex justify-between items-center">
                         <h4 class="font-heading font-bold text-lg text-slate-100">Caixa de Entrada das Mensagens</h4>
                         <span class="text-xs text-slate-400">Mensagens enviadas via formulário do site</span>
                     </div>
 
-                    <div id="adminMessagesList" class="space-y-3">
-                        <!-- Rendered by JS -->
-                    </div>
+                    <div id="adminMessagesList" class="space-y-3"></div>
                 </div>
 
-                <!-- TAB 2: GERENCIAR SOFTWARES -->
+                <!-- TAB 2: SOFTWARES -->
                 <div id="softwaresTab" class="admin-tab-content hidden space-y-6">
                     <div class="p-6 rounded-2xl bg-amazon-950 border border-emerald-800/60 space-y-4">
                         <h4 class="font-heading font-bold text-base text-gold-400">Cadastrar Novo Software / Projeto</h4>
@@ -763,13 +731,11 @@
 
                     <div class="space-y-3">
                         <h4 class="font-heading font-bold text-base text-slate-100">Softwares Cadastrados</h4>
-                        <div id="adminSoftwaresTable" class="space-y-2">
-                            <!-- Rendered by JS -->
-                        </div>
+                        <div id="adminSoftwaresTable" class="space-y-2"></div>
                     </div>
                 </div>
 
-                <!-- TAB 3: GERENCIAR ARTIGOS -->
+                <!-- TAB 3: ARTIGOS -->
                 <div id="articlesTab" class="admin-tab-content hidden space-y-6">
                     <div class="p-6 rounded-2xl bg-amazon-950 border border-emerald-800/60 space-y-4">
                         <h4 class="font-heading font-bold text-base text-gold-400">Cadastrar Novo Artigo ou Pesquisa</h4>
@@ -808,9 +774,7 @@
 
                     <div class="space-y-3">
                         <h4 class="font-heading font-bold text-base text-slate-100">Artigos Cadastrados</h4>
-                        <div id="adminArticlesTable" class="space-y-2">
-                            <!-- Rendered by JS -->
-                        </div>
+                        <div id="adminArticlesTable" class="space-y-2"></div>
                     </div>
                 </div>
 
@@ -818,15 +782,28 @@
         </div>
     </div>
 
-    <!-- TOAST NOTIFICATIONS -->
+    <!-- TOAST NOTIFICATION -->
     <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none px-5 py-3 rounded-2xl glass-panel border border-gold-500/50 text-gold-300 font-bold text-xs shadow-2xl flex items-center gap-3">
         <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
         <span id="toastText">Ação realizada com sucesso!</span>
     </div>
 
+    <!-- SCRIPT DE FUNCIONALIDADE & SUPABASE INTEGRADO -->
     <script>
-        
-        // Initial Mock Software State
+        // CONFIGURAÇÕES DO SUPABASE
+        const SUPABASE_URL = 'https://bstloqhvyhxmjsujcmst.supabase.co';
+        const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_oyA-LEtYgjna1e7PCdOECA_-xaDltZx';
+
+        let supabaseClient = null;
+        try {
+            if (window.supabase) {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+            }
+        } catch (err) {
+            console.log('Supabase carregado localmente:', err);
+        }
+
+        // DADOS PADRÃO DE INICIALIZAÇÃO
         const defaultSoftwares = [
             {
                 id: "soft-1",
@@ -854,7 +831,6 @@
             }
         ];
 
-        // Initial Mock Articles State
         const defaultArticles = [
             {
                 id: "art-1",
@@ -876,7 +852,6 @@
             }
         ];
 
-        // Initial Mock Messages State
         const defaultMessages = [
             {
                 id: "msg-1",
@@ -889,7 +864,6 @@
             }
         ];
 
-        // Ensure LocalStorage items exist
         function initLocalStorage() {
             if (!localStorage.getItem('btx_softwares')) {
                 localStorage.setItem('btx_softwares', JSON.stringify(defaultSoftwares));
@@ -906,7 +880,6 @@
         }
 
         initLocalStorage();
-
 
         let currentCategoryFilter = 'Todos';
 
@@ -955,7 +928,6 @@
                 </div>
             `).join('');
 
-            // Update Counter
             document.getElementById('counterSoftwares').textContent = `${softwares.length}+`;
         }
 
@@ -1010,19 +982,16 @@
                 </article>
             `).join('');
 
-            // Update Counter
             document.getElementById('counterArtigos').textContent = `${articles.length}+`;
         }
 
-
-        function handlePublicContactSubmit(e) {
+        async function handlePublicContactSubmit(e) {
             e.preventDefault();
             const name = document.getElementById('contactName').value;
             const email = document.getElementById('contactEmail').value;
             const subject = document.getElementById('contactSubject').value;
             const message = document.getElementById('contactMessage').value;
 
-            const messages = JSON.parse(localStorage.getItem('btx_messages') || '[]');
             const newMsg = {
                 id: 'msg-' + Date.now(),
                 name,
@@ -1033,14 +1002,24 @@
                 read: false
             };
 
+            const messages = JSON.parse(localStorage.getItem('btx_messages') || '[]');
             messages.unshift(newMsg);
             localStorage.setItem('btx_messages', JSON.stringify(messages));
+
+            if (supabaseClient) {
+                try {
+                    await supabaseClient.from('messages').insert([{
+                        name, email, subject, message, created_at: new Date()
+                    }]);
+                } catch(err) {
+                    console.log('Mensagem salva localmente.');
+                }
+            }
 
             document.getElementById('publicContactForm').reset();
             showToast('Mensagem enviada! O administrador da BTX receberá seu recado.');
             updateUnreadBadge();
         }
-
 
         function handleAdminNavClick() {
             const isLogged = localStorage.getItem('btx_admin_logged') === 'true';
@@ -1125,11 +1104,7 @@
             const messages = JSON.parse(localStorage.getItem('btx_messages') || '[]');
 
             if (messages.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-8 text-slate-400 text-xs">
-                        Nenhuma mensagem recebida até o momento.
-                    </div>
-                `;
+                container.innerHTML = `<div class="text-center py-8 text-slate-400 text-xs">Nenhuma mensagem recebida até o momento.</div>`;
                 return;
             }
 
@@ -1179,7 +1154,6 @@
             const badge = document.getElementById('unreadBadge');
             if (badge) badge.textContent = unread;
         }
-
 
         function handleAddSoftware(e) {
             e.preventDefault();
@@ -1290,7 +1264,6 @@
             `).join('');
         }
 
-
         function openModal(id) {
             document.getElementById(id).classList.remove('hidden');
         }
@@ -1308,7 +1281,7 @@
             }, 3500);
         }
 
-        // Mobile Menu Event Handler
+        // Mobile Menu Toggle
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileMenu = document.getElementById('mobileMenu');
         const menuIcon = document.getElementById('menuIcon');
@@ -1325,7 +1298,7 @@
             });
         });
 
-        // Study Simulator logic
+        // Lógica do Simulador
         const simHours = document.getElementById('simHours');
         const hoursVal = document.getElementById('hoursVal');
         const calcPlanBtn = document.getElementById('calcPlanBtn');
@@ -1356,7 +1329,6 @@
             `;
         });
 
-        // Initialize Public UI on page load
         window.addEventListener('DOMContentLoaded', () => {
             renderPublicSoftwares();
             renderPublicArticles();
