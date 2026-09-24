@@ -1,1367 +1,810 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="scroll-smooth">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BTX Tech G | Inovação Tecnológica & Impacto Social na Amazônia</title>
+    <title>BTX Tech G - Inovação & Tecnologia Social na Amazônia</title>
     
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Meta Tags para Redes Sociais (Open Graph) -->
+    <meta property="og:title" content="BTX Tech G - Soluções Tecnológicas e Impacto Social">
+    <meta property="og:description" content="Inovação, saúde, educação e desenvolvimento sustentável a partir de Abaetetuba para o Baixo Tocantins e toda a Amazônia.">
+    <meta property="og:type" content="website">
     
-    <!-- FontAwesome 6 CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- Google Fonts: Plus Jakarta Sans & Space Grotesk -->
+    <!-- Fontes & Ícones -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        amazon: {
-                            950: '#020d08',
-                            900: '#051811',
-                            850: '#072318',
-                            800: '#0a3123',
-                            700: '#0f4834',
-                            600: '#146348',
-                            500: '#10b981',
-                        },
-                        gold: {
-                            300: '#fde047',
-                            400: '#f5cd56',
-                            500: '#d4af37',
-                            600: '#ca8a04',
-                            700: '#854d0e',
-                        },
-                        whatsapp: '#25D366'
-                    },
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        heading: ['"Space Grotesk"', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        /* Custom Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #020d08;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #0f4834;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #d4af37;
+        :root {
+            --bg-dark: #06110d;
+            --bg-card: rgba(13, 31, 24, 0.7);
+            --border-glow: rgba(0, 230, 118, 0.25);
+            --primary-green: #00e676;
+            --primary-cyan: #00e5ff;
+            --text-main: #ecf0f1;
+            --text-muted: #a0aec0;
+            --accent-gold: #ffd700;
         }
 
-        .glass-panel {
-            background: rgba(7, 35, 24, 0.55);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(212, 175, 55, 0.18);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
         }
 
-        .glass-panel-hover:hover {
-            border-color: rgba(212, 175, 55, 0.45);
-            box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.2);
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 230, 118, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 229, 255, 0.08) 0%, transparent 40%);
+            background-attachment: fixed;
         }
 
-        .gold-glow {
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
+        /* Navbar Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(6, 17, 13, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 230, 118, 0.15);
         }
 
-        .emerald-glow {
-            box-shadow: 0 0 35px rgba(16, 185, 129, 0.2);
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
         }
 
-        .gold-text-gradient {
-            background: linear-gradient(135deg, #fef08a 0%, #f5cd56 40%, #d4af37 80%, #a16207 100%);
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-green);
+            text-shadow: 0 0 10px rgba(0, 230, 118, 0.5);
+        }
+
+        .btn-admin-trigger {
+            background: rgba(0, 230, 118, 0.1);
+            border: 1px solid var(--primary-green);
+            color: var(--primary-green);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .btn-admin-trigger:hover {
+            background: var(--primary-green);
+            color: #000;
+            box-shadow: 0 0 15px rgba(0, 230, 118, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 160px 2rem 100px;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            line-height: 1.15;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-cyan));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .emerald-text-gradient {
-            background: linear-gradient(135deg, #a7f3d0 0%, #34d399 50%, #059669 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .hero-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
         }
 
-        .hero-bg {
-            background: radial-gradient(circle at 50% 20%, rgba(16, 185, 129, 0.18) 0%, rgba(5, 24, 17, 0.85) 60%, rgba(2, 13, 8, 1) 100%);
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
 
-        @keyframes pulseSlow {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.05); opacity: 1; }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-green), #00b0ff);
+            color: #000;
+            padding: 0.85rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .pulse-slow {
-            animation: pulseSlow 4s infinite ease-in-out;
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(0, 230, 118, 0.5);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-main);
+            padding: 0.85rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        /* Badge / Card Hero Right */
+        .hero-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .hero-avatar-container {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            padding: 6px;
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-cyan));
+        }
+
+        .hero-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--bg-dark);
+        }
+
+        .hero-badge-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.3rem;
+        }
+
+        .hero-badge-subtitle {
+            color: var(--primary-green);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Seções Genéricas */
+        section {
+            padding: 80px 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+
+        .section-tag {
+            color: var(--primary-green);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+        }
+
+        /* Cards Grid */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            border-color: var(--primary-green);
+            transform: translateY(-50px);
+            box-shadow: 0 10px 30px rgba(0, 230, 118, 0.15);
+        }
+
+        .card-category {
+            font-size: 0.75rem;
+            color: var(--primary-cyan);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 0.8rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-link {
+            color: var(--primary-green);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            transition: gap 0.2s;
+        }
+
+        .card-link:hover {
+            gap: 12px;
+        }
+
+        /* Form / Contact */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            padding: 3rem;
+            border-radius: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #fff;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--primary-green);
+        }
+
+        /* Modal Admin */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: #0d1f18;
+            border: 1px solid var(--primary-green);
+            border-radius: 16px;
+            padding: 2.5rem;
+            max-width: 550px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero, .contact-container {
+                grid-template-columns: 1fr;
+            }
+            .nav-links {
+                display: none;
+            }
         }
     </style>
 </head>
-<body class="bg-amazon-950 text-slate-100 font-sans antialiased overflow-x-hidden selection:bg-gold-500 selection:text-amazon-950">
+<body>
 
-    <!-- NAVBAR -->
-    <header class="fixed top-0 left-0 right-0 z-40 transition-all duration-300 glass-panel border-b border-amazon-700/40" id="mainHeader">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            
-            <!-- Logo BTX -->
-            <a href="#inicio" class="flex items-center gap-3 group">
-                <div class="relative w-11 h-11 rounded-full bg-gradient-to-br from-gold-400 via-emerald-600 to-amazon-950 p-[2px] shadow-lg group-hover:scale-105 transition-transform">
-                    <div class="w-full h-full bg-amazon-950 rounded-full flex items-center justify-center relative overflow-hidden">
-                        <i class="fa-solid fa-dna text-gold-400 text-lg group-hover:rotate-45 transition-transform duration-500"></i>
-                    </div>
-                </div>
-                <div>
-                    <span class="font-heading font-extrabold text-xl tracking-wider block leading-none">
-                        BTX <span class="gold-text-gradient">COMPANY</span>
-                    </span>
-                    <span class="text-[10px] text-emerald-400 font-semibold tracking-widest uppercase block mt-1">
-                        Tech G • Abaetetuba / Pará
-                    </span>
-                </div>
+    <!-- Header / Navbar -->
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <i class="fa-solid fa-microchip"></i> BTX TECH G
             </a>
-
-            <!-- Desktop Navigation -->
-            <nav class="hidden md:flex items-center gap-7 text-sm font-medium">
-                <a href="#inicio" class="text-emerald-400 hover:text-gold-400 transition-colors">Início</a>
-                <a href="#sobre" class="text-slate-300 hover:text-gold-400 transition-colors">Sobre</a>
-                <a href="#softwares" class="text-slate-300 hover:text-gold-400 transition-colors">Projetos & Softwares</a>
-                <a href="#artigos" class="text-slate-300 hover:text-gold-400 transition-colors">Artigos & Pesquisas</a>
-                <a href="#impacto" class="text-slate-300 hover:text-gold-400 transition-colors">Impacto Social</a>
-                <a href="#contato" class="text-slate-300 hover:text-gold-400 transition-colors">Contato</a>
-            </nav>
-
-            <!-- Admin Button / Actions -->
-            <div class="hidden md:flex items-center gap-3">
-                <button id="adminNavBtn" onclick="handleAdminNavClick()" class="px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border bg-amazon-900 border-gold-500/40 text-gold-400 hover:bg-gold-500 hover:text-amazon-950">
-                    <i class="fa-solid fa-user-shield"></i>
-                    <span id="adminNavText">Área Admin</span>
-                </button>
-            </div>
-
-            <!-- Mobile Menu Toggle -->
-            <button id="mobileMenuBtn" class="md:hidden text-2xl text-slate-300 hover:text-gold-400 focus:outline-none p-2">
-                <i class="fa-solid fa-bars" id="menuIcon"></i>
-            </button>
-        </div>
-
-        <!-- Mobile Menu Dropdown -->
-        <div id="mobileMenu" class="hidden md:hidden glass-panel border-t border-amazon-700/50 px-6 py-6 space-y-4">
-            <a href="#inicio" class="block text-emerald-400 font-medium hover:text-gold-400 mobile-link">Início</a>
-            <a href="#sobre" class="block text-slate-300 font-medium hover:text-gold-400 mobile-link">Sobre a Startup</a>
-            <a href="#softwares" class="block text-slate-300 font-medium hover:text-gold-400 mobile-link">Projetos & Softwares</a>
-            <a href="#artigos" class="block text-slate-300 font-medium hover:text-gold-400 mobile-link">Artigos & Pesquisas</a>
-            <a href="#impacto" class="block text-slate-300 font-medium hover:text-gold-400 mobile-link">Impacto Pará</a>
-            <a href="#contato" class="block text-slate-300 font-medium hover:text-gold-400 mobile-link">Contato</a>
-            <button onclick="handleAdminNavClick()" class="w-full text-center px-4 py-3 rounded-xl bg-amazon-900 border border-gold-500/40 text-gold-400 font-bold block mt-4">
-                <i class="fa-solid fa-user-shield mr-2"></i> <span id="mobileAdminText">Área do Administrador</span>
+            <ul class="nav-links">
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#softwares">Projetos & Softwares</a></li>
+                <li><a href="#artigos">Artigos & Pesquisas</a></li>
+                <li><a href="#impacto">Impacto Social</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+            <button class="btn-admin-trigger" onclick="openAdminModal()">
+                <i class="fa-solid fa-lock"></i> ÁREA ADMIN
             </button>
         </div>
     </header>
 
-    <!-- HERO SECTION -->
-    <section id="inicio" class="relative pt-32 pb-20 md:pt-40 md:pb-32 hero-bg overflow-hidden">
-        <!-- Ambient Glowing Orbs -->
-        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[130px] pointer-events-none"></div>
-        <div class="absolute top-10 right-10 w-[350px] h-[350px] bg-gold-500/10 rounded-full blur-[100px] pointer-events-none"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                
-                <!-- Hero Text Left -->
-                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
-                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel border border-gold-500/40 text-xs sm:text-sm font-semibold text-gold-400 shadow-lg">
-                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                        Startup Bio-Tech Sem Fins Lucrativos
-                    </div>
-
-                    <h1 class="font-heading text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
-                        Inovação Tecnológica com <span class="gold-text-gradient">Raízes Amazônicas</span> e Impacto Social.
-                    </h1>
-
-                    <p class="text-base sm:text-lg text-slate-300 font-normal leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                        Startup sem fins lucrativos gerando prosperidade no Pará, nascida em <strong class="text-emerald-400">Abaetetuba</strong> na região do Baixo Tocantins. Desenvolvemos soluções em software para saúde, estudos personalizados, políticas públicas e pesquisas científicas.
-                    </p>
-
-                    <!-- CTAs -->
-                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
-                        <a href="#softwares" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-base shadow-lg shadow-emerald-900/50 hover:shadow-emerald-500/30 transition-all flex items-center justify-center gap-3">
-                            <i class="fa-solid fa-laptop-code text-gold-300"></i>
-                            Conhecer Softwares
-                        </a>
-                        <a href="https://wa.me/5591980453158?text=Ol%C3%A1!%20Gostaria%20de%20saber%20mais%20sobre%20os%20projetos%20da%20BTX%20Tech%20G." target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-whatsapp hover:bg-emerald-500 text-slate-950 font-bold text-base shadow-lg shadow-whatsapp/20 transition-all flex items-center justify-center gap-3">
-                            <i class="fa-brands fa-whatsapp text-xl"></i>
-                            Conversar no WhatsApp
-                        </a>
-                    </div>
-
-                    <!-- Regional Badges -->
-                    <div class="pt-8 border-t border-amazon-700/50 grid grid-cols-2 sm:grid-cols-3 gap-4 text-left">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-amazon-850 flex items-center justify-center border border-emerald-600/30 text-gold-400">
-                                <i class="fa-solid fa-location-dot"></i>
-                            </div>
-                            <div>
-                                <span class="text-xs text-slate-400 block">Sede</span>
-                                <span class="text-sm font-bold text-slate-200">Abaetetuba - PA</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-amazon-850 flex items-center justify-center border border-emerald-600/30 text-gold-400">
-                                <i class="fa-solid fa-leaf"></i>
-                            </div>
-                            <div>
-                                <span class="text-xs text-slate-400 block">Atuação</span>
-                                <span class="text-sm font-bold text-slate-200">Baixo Tocantins</span>
-                            </div>
-                        </div>
-                        <div class="col-span-2 sm:col-span-1 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-amazon-850 flex items-center justify-center border border-emerald-600/30 text-gold-400">
-                                <i class="fa-solid fa-shield-heart"></i>
-                            </div>
-                            <div>
-                                <span class="text-xs text-slate-400 block">Compromisso</span>
-                                <span class="text-sm font-bold text-slate-200">Sem Fins Lucrativos</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Hero Founder Photo & Bio-Tech Emblem Right -->
-                <div class="lg:col-span-5 relative flex flex-col items-center">
-                    <div class="relative w-full max-w-md p-6 rounded-3xl glass-panel border border-gold-500/30 shadow-2xl text-center group">
-                        
-                        <!-- Founder Photo Frame -->
-                        <div class="relative w-56 h-56 sm:w-64 sm:h-64 mx-auto mb-6 rounded-full bg-gradient-to-tr from-gold-500 via-emerald-500 to-amber-300 p-1.5 shadow-2xl emerald-glow pulse-slow">
-                            <div class="w-full h-full bg-amazon-950 rounded-full overflow-hidden relative border-2 border-gold-400/40">
-                                <img src="1000454253.jpg" alt="Liderança BTX Tech G" onerror="this.onerror=null; this.src='https://placehold.co/400x400/0a3123/f5cd56?text=BTX+Tech+G';" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
-                            </div>
-                            <!-- Bio-Tech Badge Overlay -->
-                            <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-amazon-950 border border-gold-400 text-[11px] font-bold text-gold-400 shadow-md uppercase tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-dna text-emerald-400"></i> BTX COMPANY
-                            </div>
-                        </div>
-
-                        <h3 class="font-heading font-bold text-xl text-slate-100 mb-1">
-                            Liderança & Visão Amazônica
-                        </h3>
-                        <p class="text-xs text-emerald-400 font-semibold mb-4">
-                            Selo de Excelência em Tecnologia Social
-                        </p>
-                        <p class="text-xs text-slate-300 leading-relaxed mb-4">
-                            Especialistas dedicados à união entre ciência da computação, dados públicos e resoluções para demandas da saúde, educação e sociedade paraense.
-                        </p>
-
-                        <!-- Quick Social Link -->
-                        <a href="https://wa.me/5591980453158" target="_blank" class="inline-flex items-center gap-2 text-xs font-bold text-gold-400 hover:text-gold-300 transition-colors">
-                            <i class="fa-solid fa-envelope"></i> Falar com a Liderança
-                        </a>
-                    </div>
-                </div>
-
+    <!-- Hero Section -->
+    <section class="hero">
+        <div>
+            <h1 class="hero-title">
+                Tecnologia & Inovação <span>Amazônica</span> para Impacto Social.
+            </h1>
+            <p class="hero-subtitle">
+                Prosperidade no Pará, nascida em Abaetetuba. Desenvolvemos soluções em softwares, políticas públicas, educação e saúde integradas com ciência e responsabilidade social.
+            </p>
+            <div class="hero-buttons">
+                <a href="#softwares" class="btn-primary">
+                    <i class="fa-solid fa-rocket"></i> Ver Softwares
+                </a>
+                <a href="https://wa.me/5591981119561" target="_blank" class="btn-outline">
+                    <i class="fa-brands fa-whatsapp"></i> Falar no WhatsApp
+                </a>
             </div>
+        </div>
+
+        <div class="hero-card">
+            <div class="hero-avatar-container">
+                <img src="https://raw.githubusercontent.com/gerenciamentodecontasorlando-create/baixo-tocantins-tech/main/images/orlando.jpg" 
+                     onerror="this.src='https://ui-avatars.com/api/?name=BTX+Tech&background=00e676&color=000&size=200'" 
+                     alt="Liderança BTX Company" 
+                     class="hero-avatar">
+            </div>
+            <div class="hero-badge-title">BTX Company</div>
+            <div class="hero-badge-subtitle">Liderança & Visão Amazônica</div>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.8rem;">
+                Abaetetuba/PA • Ciência • Tecnologia • Saúde Publica
+            </p>
         </div>
     </section>
 
-    <!-- SOBRE / ORIGEM & IMPACTO REGIONAL -->
-    <section id="sobre" class="py-20 bg-amazon-900/60 border-y border-amazon-700/40 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                
-                <div class="lg:col-span-6 space-y-6">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold-500/10 border border-gold-500/30 text-xs font-bold text-gold-400">
-                        <i class="fa-solid fa-tree"></i> Origem em Abaetetuba - PA
-                    </div>
-                    
-                    <h2 class="font-heading text-3xl sm:text-4xl font-extrabold text-slate-100">
-                        Tecnologia Nascida nas <span class="gold-text-gradient">Margens dos Rios da Amazônia</span>
-                    </h2>
+    <!-- Sobre -->
+    <section id="sobre">
+        <div class="section-header">
+            <span class="section-tag">Nossa Missão</span>
+            <h2 class="section-title">Transformando Realidades no Baixo Tocantins</h2>
+        </div>
+        <p style="text-align: center; max-width: 800px; margin: 0 auto; color: var(--text-muted); line-height: 1.8;">
+            A **BTX Tech G** é uma iniciativa sem fins lucrativos focada em aproximar a tecnologia de ponta das necessidades da população amazônica. Atuamos no desenvolvimento de ecossistemas de software gratuitos, formação em dados, pesquisas na saúde e articulação social para impulsionar o desenvolvimento humano sustentável.
+        </p>
+    </section>
 
-                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
-                        A <strong>BTX Tech G</strong> foi idealizada no município de <strong>Abaetetuba (Baixo Tocantins, Pará)</strong> com o objetivo de provar que soluções de ponta podem e devem ser criadas dentro da Amazônia para responder às suas próprias necessidades.
-                    </p>
-
-                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
-                        Como uma startup sem fins lucrativos, nosso compromisso primordial é com o interesse público, desenvolvendo softwares acessíveis para automatizar processos de saúde pública, capacitar concurseiros e estudantes locais e publicar artigos de relevância científica.
-                    </p>
-
-                    <div class="grid grid-cols-2 gap-4 pt-2">
-                        <div class="p-4 rounded-xl glass-panel border border-emerald-700/40">
-                            <i class="fa-solid fa-notes-medical text-2xl text-gold-400 mb-2"></i>
-                            <h4 class="font-bold text-sm text-slate-200">Saúde Fluvial</h4>
-                            <p class="text-xs text-slate-400">Softwares otimizados para regiões isoladas e rios.</p>
-                        </div>
-                        <div class="p-4 rounded-xl glass-panel border border-emerald-700/40">
-                            <i class="fa-solid fa-graduation-cap text-2xl text-gold-400 mb-2"></i>
-                            <h4 class="font-bold text-sm text-slate-200">Educação e Foco</h4>
-                            <p class="text-xs text-slate-400">Algoritmos de apoio a exames e concursos públicos.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Interactive Impact Counters -->
-                <div id="impacto" class="lg:col-span-6">
-                    <div class="p-8 rounded-3xl glass-panel border border-gold-500/30 space-y-6">
-                        <h3 class="font-heading font-bold text-xl text-slate-100 border-b border-amazon-700/60 pb-4">
-                            Indicadores de Impacto da BTX Tech G
-                        </h3>
-
-                        <div class="grid grid-cols-2 gap-6 text-center">
-                            <div class="p-4 rounded-2xl bg-amazon-950/80 border border-amazon-700/50">
-                                <span class="text-3xl sm:text-4xl font-extrabold gold-text-gradient block" id="counterSoftwares">3+</span>
-                                <span class="text-xs font-semibold text-slate-300">Softwares Desenvolvidos</span>
-                            </div>
-                            <div class="p-4 rounded-2xl bg-amazon-950/80 border border-amazon-700/50">
-                                <span class="text-3xl sm:text-4xl font-extrabold text-emerald-400 block" id="counterArtigos">2+</span>
-                                <span class="text-xs font-semibold text-slate-300">Artigos Publicados</span>
-                            </div>
-                            <div class="p-4 rounded-2xl bg-amazon-950/80 border border-amazon-700/50">
-                                <span class="text-3xl sm:text-4xl font-extrabold text-teal-300 block">11</span>
-                                <span class="text-xs font-semibold text-slate-300">Municípios Alvo no PA</span>
-                            </div>
-                            <div class="p-4 rounded-2xl bg-amazon-950/80 border border-amazon-700/50">
-                                <span class="text-3xl sm:text-4xl font-extrabold gold-text-gradient block">100%</span>
-                                <span class="text-xs font-semibold text-slate-300">Social Sem Fins Lucrativos</span>
-                            </div>
-                        </div>
-
-                        <div class="p-4 rounded-xl bg-amazon-850/80 border border-gold-500/30 flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <i class="fa-solid fa-map-location-dot text-2xl text-gold-400"></i>
-                                <div>
-                                    <span class="text-xs font-bold text-slate-200 block">Abaetetuba - Baixo Tocantins</span>
-                                    <span class="text-[11px] text-slate-400">Polo Tecnológico Social da BTX</span>
-                                </div>
-                            </div>
-                            <a href="https://wa.me/5591980453158" target="_blank" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors">
-                                Apoiar
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+    <!-- Softwares Dinâmicos -->
+    <section id="softwares">
+        <div class="section-header">
+            <span class="section-tag">Soluções Digitais</span>
+            <h2 class="section-title">Projetos & Softwares</h2>
+        </div>
+        <div class="grid-cards" id="softwares-container">
+            <!-- Carregado do Supabase -->
+            <p style="text-align: center; color: var(--text-muted); grid-column: 1/-1;">Carregando softwares...</p>
         </div>
     </section>
 
-    <!-- PROJETOS & SOFTWARES (Filterable & Manageable) -->
-    <section id="softwares" class="py-20 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-                <div>
-                    <span class="text-xs font-bold uppercase tracking-widest text-gold-400 block mb-1">Inovações Práticas</span>
-                    <h2 class="font-heading text-3xl sm:text-4xl font-extrabold">
-                        Vitrine de <span class="gold-text-gradient">Softwares & Plataformas</span>
-                    </h2>
-                </div>
-
-                <!-- Category Filters -->
-                <div class="flex flex-wrap gap-2" id="softwareFilterGroup">
-                    <button onclick="filterSoftwares('Todos')" class="soft-filter-btn active px-4 py-2 rounded-lg text-xs font-bold bg-gold-500 text-amazon-950 transition-all">
-                        Todos
-                    </button>
-                    <button onclick="filterSoftwares('Saúde Digital')" class="soft-filter-btn px-4 py-2 rounded-lg text-xs font-bold bg-amazon-850 text-slate-300 hover:text-white hover:bg-emerald-800 transition-all">
-                        Saúde Digital
-                    </button>
-                    <button onclick="filterSoftwares('Estudos & Concursos')" class="soft-filter-btn px-4 py-2 rounded-lg text-xs font-bold bg-amazon-850 text-slate-300 hover:text-white hover:bg-emerald-800 transition-all">
-                        Estudos & Concursos
-                    </button>
-                    <button onclick="filterSoftwares('Políticas Públicas')" class="soft-filter-btn px-4 py-2 rounded-lg text-xs font-bold bg-amazon-850 text-slate-300 hover:text-white hover:bg-emerald-800 transition-all">
-                        Políticas Públicas
-                    </button>
-                </div>
-            </div>
-
-            <!-- Softwares Container Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="softwaresContainer">
-                <!-- Rendered dynamically by JavaScript -->
-            </div>
-
+    <!-- Artigos Dinâmicos -->
+    <section id="artigos">
+        <div class="section-header">
+            <span class="section-tag">Produção Acadêmica</span>
+            <h2 class="section-title">Artigos & Pesquisas</h2>
+        </div>
+        <div class="grid-cards" id="artigos-container">
+            <!-- Carregado do Supabase -->
+            <p style="text-align: center; color: var(--text-muted); grid-column: 1/-1;">Carregando artigos...</p>
         </div>
     </section>
 
-    <!-- ARTIGOS CIENTÍFICOS & PESQUISAS -->
-    <section id="artigos" class="py-20 bg-amazon-900/40 border-y border-amazon-700/40 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="max-w-3xl mx-auto text-center mb-16 space-y-3">
-                <span class="text-xs font-bold uppercase tracking-widest text-gold-400 block">Produção Acadêmica</span>
-                <h2 class="font-heading text-3xl sm:text-4xl font-extrabold">
-                    Artigos Científicos e <span class="emerald-text-gradient">Publicações</span>
-                </h2>
-                <p class="text-slate-300 text-sm">
-                    Estudos elaborados pela equipe da BTX Company para subsidiar o avanço tecnológico e social no Pará.
+    <!-- Contato -->
+    <section id="contato">
+        <div class="section-header">
+            <span class="section-tag">Fale Conosco</span>
+            <h2 class="section-title">Entre em Contato com a BTX</h2>
+        </div>
+        <div class="contact-container">
+            <div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #fff;">Vamos Construir Juntos?</h3>
+                <p style="color: var(--text-muted); margin-bottom: 2rem; line-height: 1.6;">
+                    Seja para parcerias acadêmicas, projetos sociais ou utilização dos nossos softwares na sua comunidade, envie sua mensagem.
+                </p>
+                <p style="color: var(--primary-green); margin-bottom: 0.5rem;">
+                    <i class="fa-solid fa-envelope"></i> btxsuportg@gmail.com
+                </p>
+                <p style="color: var(--primary-cyan);">
+                    <i class="fa-solid fa-location-dot"></i> Abaetetuba - Pará, Amazônia
                 </p>
             </div>
-
-            <!-- Articles Container Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="artigosContainer">
-                <!-- Rendered dynamically by JavaScript -->
-            </div>
-        </div>
-    </section>
-
-    <!-- DEMONSTRATIVO DE TECNOLOGIAS BTX (Simulador Interativo) -->
-    <section class="py-16 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="p-8 sm:p-12 rounded-3xl glass-panel border border-gold-500/30">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                    
-                    <div class="lg:col-span-6 space-y-5">
-                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-gold-500/10 text-gold-400 border border-gold-500/30 uppercase">
-                            Simulador do Software
-                        </span>
-                        <h3 class="font-heading text-2xl sm:text-3xl font-extrabold text-slate-100">
-                            Experimente a Lógica do <span class="gold-text-gradient">BTX Concursos</span>
-                        </h3>
-                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                            Ajuste suas horas de estudo diárias e veja a recomendação do algoritmo inteligente da BTX para potencializar a aprovação em exames do Pará.
-                        </p>
-
-                        <!-- Controls -->
-                        <div class="space-y-4 pt-2">
-                            <div>
-                                <label class="text-xs text-slate-300 font-bold block mb-1">Selecione a Área Alvo:</label>
-                                <select id="simArea" class="w-full px-4 py-3 rounded-xl bg-amazon-950 border border-amazon-700/60 text-xs text-slate-200 focus:outline-none focus:border-gold-400">
-                                    <option value="saude">Saúde Pública (SUS, Enfermagem & Medicina)</option>
-                                    <option value="administrativo">Gestão Pública & Prefeituras do Pará</option>
-                                    <option value="educacao">Magistério & Licenciaturas</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label class="text-xs text-slate-300 font-bold block mb-1">Horas Diárias Disponíveis:</label>
-                                <input type="range" id="simHours" min="1" max="8" value="3" class="w-full accent-gold-500">
-                                <div class="flex justify-between text-[11px] text-slate-400 mt-1">
-                                    <span>1 hora/dia</span>
-                                    <span id="hoursVal" class="text-gold-400 font-bold">3 horas/dia</span>
-                                    <span>8 horas/dia</span>
-                                </div>
-                            </div>
-
-                            <button id="calcPlanBtn" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs transition-all flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-wand-magic-sparkles text-gold-300"></i> Gerar Plano Personalizado
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Result Panel -->
-                    <div class="lg:col-span-6">
-                        <div class="p-6 rounded-2xl bg-amazon-950 border border-amazon-700/60 font-mono text-xs space-y-4">
-                            <div class="flex items-center justify-between pb-3 border-b border-amazon-800">
-                                <span class="text-emerald-400 font-bold flex items-center gap-2">
-                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
-                                    BTX-STUDY-ALGO v2.5
-                                </span>
-                                <span class="text-slate-500">Abaetetuba-PA</span>
-                            </div>
-
-                            <div id="simResult" class="space-y-3 font-sans">
-                                <p class="text-slate-300 text-xs">
-                                    Selecione a área e a carga diária ao lado para rodar a simulação do plano do software.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
+            <form onsubmit="handleSendContact(event)">
+                <div class="form-group">
+                    <label>Seu Nome</label>
+                    <input type="text" id="contact-name" required placeholder="Digite seu nome completo">
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CONTATO & LOCALIZAÇÃO -->
-    <section id="contato" class="py-20 bg-amazon-900/60 border-t border-amazon-700/40 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                
-                <!-- Info Column -->
-                <div class="lg:col-span-5 space-y-6">
-                    <div>
-                        <span class="text-xs font-bold uppercase tracking-widest text-gold-400 block mb-1">Fale Conosco</span>
-                        <h2 class="font-heading text-3xl sm:text-4xl font-extrabold">
-                            Entre em Contato com a <span class="gold-text-gradient">BTX Tech G</span>
-                        </h2>
-                    </div>
-
-                    <p class="text-slate-300 text-sm leading-relaxed">
-                        Estamos abertos para parcerias institucionais, cooperação de pesquisadores, suporte e doações para a manutenção das nossas iniciativas sem fins lucrativos no Pará.
-                    </p>
-
-                    <!-- Contact Details Cards -->
-                    <div class="space-y-4 pt-2">
-                        <a href="mailto:btxsuportg@gmail.com" class="p-4 rounded-2xl glass-panel border border-emerald-700/30 flex items-center gap-4 hover:border-gold-500/50 transition-all group">
-                            <div class="w-11 h-11 rounded-xl bg-amazon-850 flex items-center justify-center text-gold-400 text-xl shrink-0 group-hover:scale-110 transition-transform">
-                                <i class="fa-solid fa-envelope"></i>
-                            </div>
-                            <div>
-                                <span class="text-[11px] text-slate-400 block uppercase font-bold">E-mail Principal</span>
-                                <span class="text-sm font-bold text-slate-100">btxsuportg@gmail.com</span>
-                            </div>
-                        </a>
-
-                        <a href="https://wa.me/5591980453158?text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20a%20equipe%20da%20BTX%20Tech%20G." target="_blank" rel="noopener noreferrer" class="p-4 rounded-2xl glass-panel border border-emerald-700/30 flex items-center gap-4 hover:border-whatsapp transition-all group">
-                            <div class="w-11 h-11 rounded-xl bg-whatsapp/20 flex items-center justify-center text-whatsapp text-2xl shrink-0 group-hover:scale-110 transition-transform">
-                                <i class="fa-brands fa-whatsapp"></i>
-                            </div>
-                            <div>
-                                <span class="text-[11px] text-whatsapp block uppercase font-bold">Telefone / WhatsApp</span>
-                                <span class="text-sm font-bold text-slate-100">(91) 98045-3158 (Brasil/PA)</span>
-                            </div>
-                        </a>
-
-                        <div class="p-4 rounded-2xl glass-panel border border-emerald-700/30 flex items-center gap-4">
-                            <div class="w-11 h-11 rounded-xl bg-amazon-850 flex items-center justify-center text-gold-400 text-xl shrink-0">
-                                <i class="fa-solid fa-location-dot"></i>
-                            </div>
-                            <div>
-                                <span class="text-[11px] text-slate-400 block uppercase font-bold">Localização</span>
-                                <span class="text-sm font-bold text-slate-100">Abaetetuba, Pará - Amazônia, Brasil</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Direct Large WhatsApp Button -->
-                    <a href="https://wa.me/5591980453158?text=Ol%C3%A1!%20Gostaria%20de%20saber%20mais%20sobre%20os%20projetos%20da%20BTX%20Tech%20G." target="_blank" class="w-full py-4 rounded-2xl bg-whatsapp hover:bg-emerald-500 text-slate-950 font-extrabold text-sm shadow-xl transition-all flex items-center justify-center gap-3">
-                        <i class="fa-brands fa-whatsapp text-2xl"></i>
-                        Iniciar Conversa no WhatsApp
-                    </a>
+                <div class="form-group">
+                    <label>Seu E-mail</label>
+                    <input type="email" id="contact-email" required placeholder="nome@exemplo.com">
                 </div>
-
-                <!-- Form Column -->
-                <div class="lg:col-span-7">
-                    <form id="publicContactForm" onsubmit="handlePublicContactSubmit(event)" class="p-8 rounded-3xl glass-panel border border-gold-500/30 space-y-4">
-                        <h4 class="font-heading font-bold text-xl text-slate-100">Enviar Mensagem Direta</h4>
-                        <p class="text-xs text-slate-300">As mensagens enviadas por aqui ficam salvas com segurança no painel do administrador da BTX Tech G.</p>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                            <div>
-                                <label class="text-xs text-slate-300 font-bold block mb-1">Seu Nome *</label>
-                                <input type="text" id="contactName" required placeholder="Ex: Maria Oliveira" class="w-full px-4 py-3 rounded-xl bg-amazon-950 border border-amazon-700/60 text-xs text-slate-200 focus:outline-none focus:border-gold-400">
-                            </div>
-
-                            <div>
-                                <label class="text-xs text-slate-300 font-bold block mb-1">Seu E-mail *</label>
-                                <input type="email" id="contactEmail" required placeholder="seuemail@exemplo.com" class="w-full px-4 py-3 rounded-xl bg-amazon-950 border border-amazon-700/60 text-xs text-slate-200 focus:outline-none focus:border-gold-400">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="text-xs text-slate-300 font-bold block mb-1">Assunto</label>
-                            <input type="text" id="contactSubject" required placeholder="Ex: Parceria para Software de Saúde" class="w-full px-4 py-3 rounded-xl bg-amazon-950 border border-amazon-700/60 text-xs text-slate-200 focus:outline-none focus:border-gold-400">
-                        </div>
-
-                        <div>
-                            <label class="text-xs text-slate-300 font-bold block mb-1">Mensagem *</label>
-                            <textarea id="contactMessage" required rows="4" placeholder="Escreva aqui detalhes sobre sua mensagem ou solicitação..." class="w-full px-4 py-3 rounded-xl bg-amazon-950 border border-amazon-700/60 text-xs text-slate-200 focus:outline-none focus:border-gold-400"></textarea>
-                        </div>
-
-                        <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-amazon-950 font-extrabold text-sm shadow-lg transition-all flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-paper-plane"></i> Enviar Mensagem para Administrador
-                        </button>
-                    </form>
+                <div class="form-group">
+                    <label>Mensagem</label>
+                    <textarea id="contact-message" rows="4" required placeholder="Como podemos ajudar?"></textarea>
                 </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="bg-amazon-950 border-t border-amazon-700/40 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-12 border-b border-amazon-800">
-                
-                <div class="md:col-span-5 space-y-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-full bg-gold-500/20 border border-gold-500/50 flex items-center justify-center text-gold-400">
-                            <i class="fa-solid fa-dna text-sm"></i>
-                        </div>
-                        <span class="font-heading font-bold text-lg text-slate-100">BTX TECH G</span>
-                    </div>
-                    <p class="text-xs text-slate-400 leading-relaxed max-w-sm">
-                        Startup social sem fins lucrativos gerando prosperidade na Amazônia. Nascida em Abaetetuba-PA.
-                    </p>
-                    <p class="text-xs text-gold-400">
-                        E-mail Admin: <strong>btxsuportg@gmail.com</strong>
-                    </p>
-                </div>
-
-                <div class="md:col-span-3 space-y-3">
-                    <h5 class="text-xs font-bold text-gold-400 uppercase tracking-wider">Links Rápidos</h5>
-                    <ul class="space-y-2 text-xs text-slate-300">
-                        <li><a href="#inicio" class="hover:text-gold-400 transition-colors">Início</a></li>
-                        <li><a href="#sobre" class="hover:text-gold-400 transition-colors">Sobre a Startup</a></li>
-                        <li><a href="#softwares" class="hover:text-gold-400 transition-colors">Softwares e Projetos</a></li>
-                        <li><a href="#artigos" class="hover:text-gold-400 transition-colors">Artigos Científicos</a></li>
-                        <li><a href="#contato" class="hover:text-gold-400 transition-colors">Contato</a></li>
-                    </ul>
-                </div>
-
-                <div class="md:col-span-4 space-y-3">
-                    <h5 class="text-xs font-bold text-gold-400 uppercase tracking-wider">Área Restrita</h5>
-                    <p class="text-xs text-slate-400">
-                        Acesso exclusivo para administradores gerenciarem softwares, artigos e mensagens.
-                    </p>
-                    <button onclick="handleAdminNavClick()" class="px-4 py-2 rounded-xl bg-amazon-900 border border-gold-500/40 text-gold-400 hover:bg-gold-500 hover:text-amazon-950 font-bold text-xs transition-colors inline-flex items-center gap-2">
-                        <i class="fa-solid fa-lock"></i> Entrar na Área do Administrador
-                    </button>
-                </div>
-
-            </div>
-
-            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 gap-4">
-                <p>© 2026 BTX Tech G / BTX Company. Abaetetuba - Pará, Amazônia. Todos os direitos reservados.</p>
-                <p class="text-emerald-500 font-semibold">Tecnologia & Prosperidade Social</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- MODAL 1: LOGIN DO ADMINISTRADOR -->
-    <div id="loginModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-        <div class="glass-panel border border-gold-500/40 rounded-3xl max-w-md w-full p-6 sm:p-8 relative">
-            <button onclick="closeModal('loginModal')" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-amazon-950 text-slate-400 hover:text-gold-400 flex items-center justify-center border border-amazon-700">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-
-            <div class="text-center mb-6">
-                <div class="w-14 h-14 rounded-2xl bg-amazon-850 border border-gold-500/40 flex items-center justify-center text-gold-400 text-2xl mx-auto mb-3">
-                    <i class="fa-solid fa-user-shield"></i>
-                </div>
-                <h3 class="font-heading font-bold text-2xl text-slate-100">Área do Administrador</h3>
-                <p class="text-xs text-slate-400 mt-1">Acesso exclusivo do gestor da BTX Tech G</p>
-            </div>
-
-            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
-                <div>
-                    <label class="text-xs text-slate-300 font-bold block mb-1">E-mail do Administrador</label>
-                    <input type="email" id="loginEmail" required value="btxsuportg@gmail.com" class="w-full px-4 py-3 rounded-xl bg-amazon-950 border border-amazon-700/60 text-xs text-slate-200 focus:outline-none focus:border-gold-400">
-                </div>
-
-                <div>
-                    <label class="text-xs text-slate-300 font-bold block mb-1">Senha de Acesso</label>
-                    <input type="password" id="loginPassword" required placeholder="Digite sua senha" class="w-full px-4 py-3 rounded-xl bg-amazon-950 border border-amazon-700/60 text-xs text-slate-200 focus:outline-none focus:border-gold-400">
-                </div>
-
-                <div id="loginError" class="hidden p-3 rounded-xl bg-red-950/80 border border-red-500 text-red-200 text-xs text-center">
-                    E-mail ou senha incorretos.
-                </div>
-
-                <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-amazon-950 font-extrabold text-xs shadow-lg transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-right-to-bracket"></i> Entrar no Painel
+                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">
+                    <i class="fa-solid fa-paper-plane"></i> Enviar Mensagem
                 </button>
             </form>
         </div>
-    </div>
+    </section>
 
-    <!-- MODAL 2: PAINEL DASHBOARD DO ADMINISTRADOR (SISTEMA DE GESTÃO COMPLETO) -->
-    <div id="adminDashboardModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
-        <div class="glass-panel border border-gold-500/40 rounded-3xl max-w-5xl w-full max-h-[90vh] flex flex-col relative overflow-hidden">
+    <!-- Modal Admin -->
+    <div class="modal" id="adminModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeAdminModal()">&times;</span>
             
-            <!-- Dashboard Header -->
-            <div class="p-6 border-b border-amazon-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-amazon-950/80">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-gold-500/20 border border-gold-500/50 flex items-center justify-center text-gold-400">
-                        <i class="fa-solid fa-gauge-high"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-heading font-bold text-xl text-slate-100">Painel de Gestão Admin</h3>
-                        <span class="text-xs text-emerald-400 font-medium">Logado como: btxsuportg@gmail.com</span>
-                    </div>
+            <div id="admin-login-step">
+                <h3 style="color: #fff; margin-bottom: 1.5rem; font-size: 1.4rem;">Acesso Administrativo</h3>
+                <div class="form-group">
+                    <label>E-mail de Acesso</label>
+                    <input type="email" id="admin-email" placeholder="btxsuportg@gmail.com">
                 </div>
-
-                <div class="flex items-center gap-3">
-                    <button onclick="logoutAdmin()" class="px-4 py-2 rounded-xl bg-red-900/60 hover:bg-red-800 text-red-200 border border-red-700/50 font-bold text-xs transition-colors flex items-center gap-2">
-                        <i class="fa-solid fa-power-off"></i> Sair / Logout
-                    </button>
-                    <button onclick="closeModal('adminDashboardModal')" class="w-9 h-9 rounded-full bg-amazon-900 text-slate-400 hover:text-gold-400 flex items-center justify-center border border-amazon-700">
-                        <i class="fa-solid fa-xmark text-lg"></i>
-                    </button>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="admin-pass">
                 </div>
-            </div>
-
-            <!-- Dashboard Navigation Tabs -->
-            <div class="flex border-b border-amazon-700/60 bg-amazon-900/50 px-6 pt-2 gap-2 overflow-x-auto">
-                <button onclick="switchAdminTab('messagesTab')" id="tabBtnMessages" class="admin-tab-btn active px-4 py-3 text-xs font-bold border-b-2 border-gold-400 text-gold-400 transition-colors flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-inbox"></i> Mensagens Recebidas <span id="unreadBadge" class="px-2 py-0.5 rounded-full bg-emerald-500 text-amazon-950 text-[10px]">0</span>
-                </button>
-                <button onclick="switchAdminTab('softwaresTab')" id="tabBtnSoftwares" class="admin-tab-btn px-4 py-3 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition-colors flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-laptop-code"></i> Gerenciar Softwares
-                </button>
-                <button onclick="switchAdminTab('articlesTab')" id="tabBtnArticles" class="admin-tab-btn px-4 py-3 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition-colors flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-newspaper"></i> Gerenciar Artigos
+                <button onclick="handleAdminLogin()" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+                    Entrar no Painel
                 </button>
             </div>
 
-            <!-- Dashboard Content Body -->
-            <div class="p-6 overflow-y-auto flex-1 space-y-6">
-                
-                <!-- TAB 1: MENSAGENS RECEBIDAS -->
-                <div id="messagesTab" class="admin-tab-content space-y-4">
-                    <div class="flex justify-between items-center">
-                        <h4 class="font-heading font-bold text-lg text-slate-100">Caixa de Entrada das Mensagens</h4>
-                        <span class="text-xs text-slate-400">Mensagens enviadas via formulário do site</span>
+            <div id="admin-panel-step" style="display: none;">
+                <h3 style="color: var(--primary-green); margin-bottom: 1rem;">Painel de Gestão Supabase</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">Adicione novos projetos ou pesquisas para publicar na home page.</p>
+
+                <!-- Cadastrar Software -->
+                <form onsubmit="handleAddSoftware(event)" style="margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1.5rem;">
+                    <h4 style="color: #fff; margin-bottom: 0.8rem;">+ Cadastrar Novo Software</h4>
+                    <div class="form-group">
+                        <input type="text" id="sw-title" placeholder="Título do Software" required>
                     </div>
-
-                    <div id="adminMessagesList" class="space-y-3">
-                        <!-- Rendered by JS -->
+                    <div class="form-group">
+                        <input type="text" id="sw-category" placeholder="Categoria (ex: Saude, Educacao)" required>
                     </div>
-                </div>
-
-                <!-- TAB 2: GERENCIAR SOFTWARES -->
-                <div id="softwaresTab" class="admin-tab-content hidden space-y-6">
-                    <div class="p-6 rounded-2xl bg-amazon-950 border border-emerald-800/60 space-y-4">
-                        <h4 class="font-heading font-bold text-base text-gold-400">Cadastrar Novo Software / Projeto</h4>
-                        
-                        <form onsubmit="handleAddSoftware(event)" class="space-y-4">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="text-xs text-slate-300 font-bold block mb-1">Nome do Software *</label>
-                                    <input type="text" id="newSoftTitle" required placeholder="Ex: BTX Telemedicina" class="w-full px-4 py-2.5 rounded-xl bg-amazon-900 border border-amazon-700 text-xs text-slate-200 focus:outline-none focus:border-gold-400">
-                                </div>
-                                <div>
-                                    <label class="text-xs text-slate-300 font-bold block mb-1">Categoria *</label>
-                                    <select id="newSoftCategory" required class="w-full px-4 py-2.5 rounded-xl bg-amazon-900 border border-amazon-700 text-xs text-slate-200 focus:outline-none focus:border-gold-400">
-                                        <option value="Saúde Digital">Saúde Digital</option>
-                                        <option value="Estudos & Concursos">Estudos & Concursos</option>
-                                        <option value="Políticas Públicas">Políticas Públicas</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="text-xs text-slate-300 font-bold block mb-1">Link de Acesso do Software / Protótipo *</label>
-                                    <input type="url" id="newSoftLink" required placeholder="https://..." class="w-full px-4 py-2.5 rounded-xl bg-amazon-900 border border-amazon-700 text-xs text-slate-200 focus:outline-none focus:border-gold-400">
-                                </div>
-                                <div>
-                                    <label class="text-xs text-slate-300 font-bold block mb-1">Ícone FontAwesome (Opcional)</label>
-                                    <input type="text" id="newSoftIcon" placeholder="fa-notes-medical" class="w-full px-4 py-2.5 rounded-xl bg-amazon-900 border border-amazon-700 text-xs text-slate-200 focus:outline-none focus:border-gold-400">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="text-xs text-slate-300 font-bold block mb-1">Descrição Breve *</label>
-                                <textarea id="newSoftDesc" required rows="2" placeholder="Resumo das funcionalidades..." class="w-full px-4 py-2.5 rounded-xl bg-amazon-900 border border-amazon-700 text-xs text-slate-200 focus:outline-none focus:border-gold-400"></textarea>
-                            </div>
-
-                            <button type="submit" class="px-6 py-2.5 rounded-xl bg-gold-500 hover:bg-gold-400 text-amazon-950 font-bold text-xs transition-colors flex items-center gap-2">
-                                <i class="fa-solid fa-plus"></i> Publicar Software na Vitrine
-                            </button>
-                        </form>
+                    <div class="form-group">
+                        <textarea id="sw-desc" placeholder="Descrição do Software" rows="2" required></textarea>
                     </div>
-
-                    <div class="space-y-3">
-                        <h4 class="font-heading font-bold text-base text-slate-100">Softwares Cadastrados</h4>
-                        <div id="adminSoftwaresTable" class="space-y-2">
-                            <!-- Rendered by JS -->
-                        </div>
+                    <div class="form-group">
+                        <input type="url" id="sw-link" placeholder="Link de Acesso ou GitHub" required>
                     </div>
-                </div>
+                    <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">Publicar Software</button>
+                </form>
 
-                <!-- TAB 3: GERENCIAR ARTIGOS -->
-                <div id="articlesTab" class="admin-tab-content hidden space-y-6">
-                    <div class="p-6 rounded-2xl bg-amazon-950 border border-emerald-800/60 space-y-4">
-                        <h4 class="font-heading font-bold text-base text-gold-400">Cadastrar Novo Artigo ou Pesquisa</h4>
-                        
-                        <form onsubmit="handleAddArticle(event)" class="space-y-4">
-                            <div>
-                                <label class="text-xs text-slate-300 font-bold block mb-1">Título do Artigo *</label>
-                                <input type="text" id="newArtTitle" required placeholder="Ex: Impactos da tecnologia no SUS em Abaetetuba" class="w-full px-4 py-2.5 rounded-xl bg-amazon-900 border border-amazon-700 text-xs text-slate-200 focus:outline-none focus:border-gold-400">
-                            </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                <div>
-                                    <label class="text-xs text-slate-300 font-bold block mb-1">Categoria *</label>
-                                    <input type="text" id="newArtCategory" required placeholder="Ex: Saúde / Educação" class="w-full px-4 py-2.5 rounded-xl bg-amazon-900 border border-amazon-700 text-xs text-slate-200 focus:outline-none focus:border-gold-400">
-                                </div>
-                                <div>
-                                    <label class="text-xs text-slate-300 font-bold block mb-1">Autores *</label>
-                                    <input type="text" id="newArtAuthors" required placeholder="Ex: Equipe BTX Tech G" class="w-full px-4 py-2.5 rounded-xl bg-amazon-900 border border-amazon-700 text-xs text-slate-200 focus:outline-none focus:border-gold-400">
-                                </div>
-                                <div>
-                                    <label class="text-xs text-slate-300 font-bold block mb-1">Link do Artigo / PDF *</label>
-                                    <input type="url" id="newArtLink" required placeholder="https://..." class="w-full px-4 py-2.5 rounded-xl bg-amazon-900 border border-amazon-700 text-xs text-slate-200 focus:outline-none focus:border-gold-400">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="text-xs text-slate-300 font-bold block mb-1">Resumo / Abstract *</label>
-                                <textarea id="newArtAbstract" required rows="3" placeholder="Síntese do artigo científico..." class="w-full px-4 py-2.5 rounded-xl bg-amazon-900 border border-amazon-700 text-xs text-slate-200 focus:outline-none focus:border-gold-400"></textarea>
-                            </div>
-
-                            <button type="submit" class="px-6 py-2.5 rounded-xl bg-gold-500 hover:bg-gold-400 text-amazon-950 font-bold text-xs transition-colors flex items-center gap-2">
-                                <i class="fa-solid fa-plus"></i> Publicar Artigo na Plataforma
-                            </button>
-                        </form>
+                <!-- Cadastrar Artigo -->
+                <form onsubmit="handleAddArtigo(event)">
+                    <h4 style="color: #fff; margin-bottom: 0.8rem;">+ Publicar Novo Artigo</h4>
+                    <div class="form-group">
+                        <input type="text" id="art-title" placeholder="Título do Artigo" required>
                     </div>
-
-                    <div class="space-y-3">
-                        <h4 class="font-heading font-bold text-base text-slate-100">Artigos Cadastrados</h4>
-                        <div id="adminArticlesTable" class="space-y-2">
-                            <!-- Rendered by JS -->
-                        </div>
+                    <div class="form-group">
+                        <input type="text" id="art-category" placeholder="Categoria (ex: Pesquisa, Saude)" required>
                     </div>
-                </div>
-
+                    <div class="form-group">
+                        <textarea id="art-summary" placeholder="Resumo do Artigo" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="url" id="art-link" placeholder="Link Completo do Artigo" required>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">Publicar Artigo</button>
+                </form>
             </div>
         </div>
     </div>
 
-    <!-- TOAST NOTIFICATIONS -->
-    <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none px-5 py-3 rounded-2xl glass-panel border border-gold-500/50 text-gold-300 font-bold text-xs shadow-2xl flex items-center gap-3">
-        <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
-        <span id="toastText">Ação realizada com sucesso!</span>
-    </div>
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 BTX Tech G - Todos os direitos reservados. Abaetetuba/PA, Amazônia.</p>
+    </footer>
 
+    <!-- Script Principal & Supabase Integration -->
     <script>
-        
-        // Initial Mock Software State
+        // CONFIGURAÇÕES SUPABASE
+        const SUPABASE_URL = 'https://ehhfgyspgzrudawqtqzj.supabase.co';
+        const SUPABASE_ANON_KEY = 'Sb_publishable_yCxQxeOZDBWhE_C_dKskTQ_r9_fIg1e';
+
+        const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+        // Dados padrão para exibição inicial se a tabela estiver vazia
         const defaultSoftwares = [
             {
-                id: "soft-1",
-                title: "BTX Saúde Regional",
-                category: "Saúde Digital",
-                icon: "fa-notes-medical",
-                description: "Sistema de triagem preventiva e prontuário otimizado para unidades de saúde e comunidades fluviais e rurais do Pará.",
-                link: "https://wa.me/5591980453158?text=Gostaria%20de%20acessar%20a%20demonstra%C3%A7%C3%A3o%20do%20BTX%20Sa%C3%BAde%20Regional"
+                title: "Sistema de Triagem & Saúde Regional",
+                category: "saude",
+                description: "Plataforma desenvolvida para otimizar o atendimento em UBSs no Baixo Tocantins.",
+                link: "https://github.com/gerenciamentodecontasorlando-create"
             },
             {
-                id: "soft-2",
-                title: "BTX Concursos & Prep",
-                category: "Estudos & Concursos",
-                icon: "fa-book-open-reader",
-                description: "Plataforma inteligente com cronogramas dinâmicos, simulados e algoritmo de repetição espaçada focado em exames no Pará.",
-                link: "https://wa.me/5591980453158?text=Quero%20acessar%20o%20BTX%20Concursos"
-            },
-            {
-                id: "soft-3",
-                title: "Painel de Gestão Social & Indicadores",
-                category: "Políticas Públicas",
-                icon: "fa-chart-line",
-                description: "Observatório de dados socioeconômicos e educacionais da região de Abaetetuba e Baixo Tocantins para fundamentação de projetos sociais.",
-                link: "https://wa.me/5591980453158?text=Tenho%20interesse%20nos%20dados%20do%20Painel%20de%20Gest%C3%A3o%20Social"
+                title: "Monitoramento de Impacto Social",
+                category: "tecnologia",
+                description: "Painel de métricas e indicadores de políticas públicas para a Região Amazônica.",
+                link: "https://github.com/gerenciamentodecontasorlando-create"
             }
         ];
 
-        // Initial Mock Articles State
-        const defaultArticles = [
+        const defaultArtigos = [
             {
-                id: "art-1",
-                title: "Impactos da Tecnologia da Informação na Eficiência do Atendimento em Saúde no Baixo Tocantins",
-                category: "Saúde / Sociedade",
-                authors: "Equipe de Pesquisa BTX Tech G",
-                date: "2025",
-                abstract: "Estudo sobre os desafios de conectividade e implementação de sistemas de dados em postos de saúde da região de Abaetetuba-PA.",
-                link: "https://wa.me/5591980453158?text=Solicito%20acesso%20ao%20artigo%20sobre%20Sa%C3%BAde%20no%20Baixo%20Tocantins"
-            },
-            {
-                id: "art-2",
-                title: "Metodologias Ativas e Algoritmos no Desempenho de Estudantes da Região Amazônica em Concursos Públicos",
-                category: "Educação & Tecnologia",
-                authors: "Núcleo de EdTech BTX Company",
-                date: "2025",
-                abstract: "Análise demonstrando o aumento de retenção de conteúdos após o uso de plataformas de estudos personalizados adaptadas à realidade local.",
-                link: "https://wa.me/5591980453158?text=Solicito%20acesso%20ao%20artigo%20sobre%20Concursos%20P%C3%BAblicos"
+                title: "Tecnologia Social como Vetor de Saúde Pública no Pará",
+                category: "saude",
+                summary: "Estudo analítico sobre a implementação de ferramentas digitais no atendimento médico comunitário.",
+                link: "#"
             }
         ];
 
-        // Initial Mock Messages State
-        const defaultMessages = [
-            {
-                id: "msg-1",
-                name: "Prefeitura de Abaetetuba (Exemplo)",
-                email: "contato@abaetetuba.pa.gov.br",
-                subject: "Interesse no BTX Saúde Regional",
-                message: "Gostaríamos de agendar uma apresentação dos softwares de saúde para a região das ilhas.",
-                date: "23/09/2026",
-                read: false
-            }
-        ];
+        // Carregar Dados ao Abrir a Página
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchSoftwares();
+            fetchArtigos();
+        });
 
-        // Ensure LocalStorage items exist
-        function initLocalStorage() {
-            if (!localStorage.getItem('btx_softwares')) {
-                localStorage.setItem('btx_softwares', JSON.stringify(defaultSoftwares));
-            }
-            if (!localStorage.getItem('btx_articles')) {
-                localStorage.setItem('btx_articles', JSON.stringify(defaultArticles));
-            }
-            if (!localStorage.getItem('btx_messages')) {
-                localStorage.setItem('btx_messages', JSON.stringify(defaultMessages));
-            }
-            if (!localStorage.getItem('btx_admin_logged')) {
-                localStorage.setItem('btx_admin_logged', 'false');
-            }
-        }
-
-        initLocalStorage();
-
-
-        let currentCategoryFilter = 'Todos';
-
-        function renderPublicSoftwares() {
-            const container = document.getElementById('softwaresContainer');
-            const softwares = JSON.parse(localStorage.getItem('btx_softwares') || '[]');
-
-            const filtered = currentCategoryFilter === 'Todos' 
-                ? softwares 
-                : softwares.filter(s => s.category === currentCategoryFilter);
-
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-full text-center py-12 p-8 rounded-2xl glass-panel border border-amazon-700/50">
-                        <i class="fa-solid fa-folder-open text-4xl text-gold-400 mb-3"></i>
-                        <p class="text-sm text-slate-300">Nenhum software cadastrado nesta categoria no momento.</p>
-                    </div>
-                `;
+        async function fetchSoftwares() {
+            const container = document.getElementById('softwares-container');
+            
+            if (!supabase) {
+                renderSoftwares(defaultSoftwares);
                 return;
             }
 
-            container.innerHTML = filtered.map(item => `
-                <div class="glass-panel rounded-2xl p-6 border border-emerald-800/40 hover:border-gold-500/50 transition-all flex flex-col justify-between group">
-                    <div>
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase bg-amazon-950/80 text-emerald-300 border border-emerald-700/50">
-                                ${item.category}
-                            </span>
-                            <div class="w-10 h-10 rounded-xl bg-amazon-950 flex items-center justify-center text-gold-400 text-xl group-hover:scale-110 transition-transform">
-                                <i class="fa-solid ${item.icon || 'fa-laptop-code'}"></i>
-                            </div>
-                        </div>
-                        <h3 class="font-heading font-bold text-xl text-slate-100 mb-2 group-hover:text-gold-400 transition-colors">
-                            ${item.title}
-                        </h3>
-                        <p class="text-xs text-slate-300 leading-relaxed mb-6">
-                            ${item.description}
-                        </p>
-                    </div>
-                    <div class="pt-4 border-t border-amazon-800 flex items-center justify-between">
-                        <span class="text-[11px] text-emerald-400 font-semibold">Iniciativa BTX</span>
-                        <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-gold-500 hover:bg-gold-400 text-amazon-950 text-xs font-bold transition-all flex items-center gap-1.5">
-                            Acessar Software <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            `).join('');
-
-            // Update Counter
-            document.getElementById('counterSoftwares').textContent = `${softwares.length}+`;
-        }
-
-        function filterSoftwares(category) {
-            currentCategoryFilter = category;
-            
-            document.querySelectorAll('.soft-filter-btn').forEach(btn => {
-                if (btn.textContent.trim() === category) {
-                    btn.className = "soft-filter-btn active px-4 py-2 rounded-lg text-xs font-bold bg-gold-500 text-amazon-950 transition-all";
+            try {
+                const { data, error } = await supabase.from('softwares').select('*').order('created_at', { ascending: false });
+                if (error || !data || data.length === 0) {
+                    renderSoftwares(defaultSoftwares);
                 } else {
-                    btn.className = "soft-filter-btn px-4 py-2 rounded-lg text-xs font-bold bg-amazon-850 text-slate-300 hover:text-white hover:bg-emerald-800 transition-all";
+                    renderSoftwares(data);
                 }
-            });
-
-            renderPublicSoftwares();
+            } catch (err) {
+                renderSoftwares(defaultSoftwares);
+            }
         }
 
-        function renderPublicArticles() {
-            const container = document.getElementById('artigosContainer');
-            const articles = JSON.parse(localStorage.getItem('btx_articles') || '[]');
-
-            if (articles.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-full text-center py-12 p-8 rounded-2xl glass-panel border border-amazon-700/50">
-                        <i class="fa-solid fa-book-bookmark text-4xl text-gold-400 mb-3"></i>
-                        <p class="text-sm text-slate-300">Nenhum artigo cadastrado no momento.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = articles.map(item => `
-                <article class="p-6 rounded-2xl glass-panel border border-emerald-800/40 hover:border-gold-500/50 transition-all flex flex-col justify-between">
+        function renderSoftwares(list) {
+            const container = document.getElementById('softwares-container');
+            container.innerHTML = list.map(item => `
+                <div class="card">
                     <div>
-                        <div class="flex items-center justify-between text-[11px] text-gold-400 font-semibold mb-3">
-                            <span class="flex items-center gap-1.5">
-                                <i class="fa-solid fa-newspaper"></i> ${item.category}
-                            </span>
-                            <span class="text-slate-400">${item.date || '2025/2026'}</span>
-                        </div>
-                        <h4 class="font-heading font-bold text-lg text-slate-100 mb-2">
-                            ${item.title}
-                        </h4>
-                        <p class="text-[11px] text-emerald-400 mb-3">Autores: ${item.authors}</p>
-                        <p class="text-xs text-slate-300 leading-relaxed mb-6">
-                            ${item.abstract}
-                        </p>
+                        <span class="card-category">${item.category}</span>
+                        <h3 class="card-title">${item.title}</h3>
+                        <p class="card-desc">${item.description}</p>
                     </div>
-                    <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 rounded-xl bg-amazon-850 hover:bg-emerald-800 text-xs font-bold text-gold-400 border border-amazon-700 transition-colors flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-file-pdf"></i> Ler / Baixar Artigo Completo
+                    <a href="${item.link}" target="_blank" class="card-link">
+                        Acessar Software <i class="fa-solid fa-arrow-right"></i>
                     </a>
-                </article>
+                </div>
             `).join('');
-
-            // Update Counter
-            document.getElementById('counterArtigos').textContent = `${articles.length}+`;
         }
 
+        async function fetchArtigos() {
+            const container = document.getElementById('artigos-container');
 
-        function handlePublicContactSubmit(e) {
-            e.preventDefault();
-            const name = document.getElementById('contactName').value;
-            const email = document.getElementById('contactEmail').value;
-            const subject = document.getElementById('contactSubject').value;
-            const message = document.getElementById('contactMessage').value;
-
-            const messages = JSON.parse(localStorage.getItem('btx_messages') || '[]');
-            const newMsg = {
-                id: 'msg-' + Date.now(),
-                name,
-                email,
-                subject,
-                message,
-                date: new Date().toLocaleDateString('pt-BR'),
-                read: false
-            };
-
-            messages.unshift(newMsg);
-            localStorage.setItem('btx_messages', JSON.stringify(messages));
-
-            document.getElementById('publicContactForm').reset();
-            showToast('Mensagem enviada! O administrador da BTX receberá seu recado.');
-            updateUnreadBadge();
-        }
-
-
-        function handleAdminNavClick() {
-            const isLogged = localStorage.getItem('btx_admin_logged') === 'true';
-            if (isLogged) {
-                openModal('adminDashboardModal');
-                renderAdminDashboard();
-            } else {
-                openModal('loginModal');
-            }
-        }
-
-        function handleAdminLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
-            const errorEl = document.getElementById('loginError');
-
-            if (email === 'btxsuportg@gmail.com' && password === 'Nasc140@') {
-                localStorage.setItem('btx_admin_logged', 'true');
-                errorEl.classList.add('hidden');
-                closeModal('loginModal');
-                updateAdminNavUI();
-                openModal('adminDashboardModal');
-                renderAdminDashboard();
-                showToast('Login de Administrador realizado com sucesso!');
-            } else {
-                errorEl.classList.remove('hidden');
-            }
-        }
-
-        function logoutAdmin() {
-            localStorage.setItem('btx_admin_logged', 'false');
-            updateAdminNavUI();
-            closeModal('adminDashboardModal');
-            showToast('Sessão encerrada.');
-        }
-
-        function updateAdminNavUI() {
-            const isLogged = localStorage.getItem('btx_admin_logged') === 'true';
-            const textEl = document.getElementById('adminNavText');
-            const mobileTextEl = document.getElementById('mobileAdminText');
-            
-            if (isLogged) {
-                textEl.textContent = 'Painel Admin (Ativo)';
-                mobileTextEl.textContent = 'Painel Admin (Ativo)';
-            } else {
-                textEl.textContent = 'Área Admin';
-                mobileTextEl.textContent = 'Área do Administrador';
-            }
-        }
-
-        function switchAdminTab(tabId) {
-            document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-                btn.classList.remove('border-gold-400', 'text-gold-400');
-                btn.classList.add('border-transparent', 'text-slate-400');
-            });
-
-            document.querySelectorAll('.admin-tab-content').forEach(content => {
-                content.classList.add('hidden');
-            });
-
-            if (tabId === 'messagesTab') {
-                document.getElementById('tabBtnMessages').classList.add('border-gold-400', 'text-gold-400');
-            } else if (tabId === 'softwaresTab') {
-                document.getElementById('tabBtnSoftwares').classList.add('border-gold-400', 'text-gold-400');
-            } else if (tabId === 'articlesTab') {
-                document.getElementById('tabBtnArticles').classList.add('border-gold-400', 'text-gold-400');
-            }
-
-            document.getElementById(tabId).classList.remove('hidden');
-        }
-
-        function renderAdminDashboard() {
-            renderAdminMessages();
-            renderAdminSoftwaresTable();
-            renderAdminArticlesTable();
-            updateUnreadBadge();
-        }
-
-        function renderAdminMessages() {
-            const container = document.getElementById('adminMessagesList');
-            const messages = JSON.parse(localStorage.getItem('btx_messages') || '[]');
-
-            if (messages.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-8 text-slate-400 text-xs">
-                        Nenhuma mensagem recebida até o momento.
-                    </div>
-                `;
+            if (!supabase) {
+                renderArtigos(defaultArtigos);
                 return;
             }
 
-            container.innerHTML = messages.map(msg => `
-                <div class="p-4 rounded-xl ${msg.read ? 'bg-amazon-950/60 border-amazon-800' : 'bg-amazon-900 border-gold-500/40'} border space-y-2">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-amazon-800 pb-2">
-                        <div>
-                            <span class="font-bold text-slate-100 text-xs">${msg.name}</span>
-                            <span class="text-[11px] text-emerald-400 ml-2">&lt;${msg.email}&gt;</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-[10px] text-slate-400">${msg.date}</span>
-                            <button onclick="toggleReadMessage('${msg.id}')" class="text-[11px] px-2 py-0.5 rounded bg-amazon-800 hover:bg-emerald-800 text-slate-300">
-                                ${msg.read ? 'Marcar como não lida' : 'Marcar como lida'}
-                            </button>
-                            <button onclick="deleteMessage('${msg.id}')" class="text-red-400 hover:text-red-300 text-xs px-2 py-0.5">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <p class="text-xs font-bold text-gold-400">Assunto: ${msg.subject}</p>
-                    <p class="text-xs text-slate-300 leading-relaxed">${msg.message}</p>
-                </div>
-            `).join('');
+            try {
+                const { data, error } = await supabase.from('artigos').select('*').order('created_at', { ascending: false });
+                if (error || !data || data.length === 0) {
+                    renderArtigos(defaultArtigos);
+                } else {
+                    renderArtigos(data);
+                }
+            } catch (err) {
+                renderArtigos(defaultArtigos);
+            }
         }
 
-        function toggleReadMessage(id) {
-            let messages = JSON.parse(localStorage.getItem('btx_messages') || '[]');
-            messages = messages.map(m => m.id === id ? { ...m, read: !m.read } : m);
-            localStorage.setItem('btx_messages', JSON.stringify(messages));
-            renderAdminMessages();
-            updateUnreadBadge();
-        }
-
-        function deleteMessage(id) {
-            let messages = JSON.parse(localStorage.getItem('btx_messages') || '[]');
-            messages = messages.filter(m => m.id !== id);
-            localStorage.setItem('btx_messages', JSON.stringify(messages));
-            renderAdminMessages();
-            updateUnreadBadge();
-            showToast('Mensagem removida.');
-        }
-
-        function updateUnreadBadge() {
-            const messages = JSON.parse(localStorage.getItem('btx_messages') || '[]');
-            const unread = messages.filter(m => !m.read).length;
-            const badge = document.getElementById('unreadBadge');
-            if (badge) badge.textContent = unread;
-        }
-
-
-        function handleAddSoftware(e) {
-            e.preventDefault();
-            const title = document.getElementById('newSoftTitle').value;
-            const category = document.getElementById('newSoftCategory').value;
-            const link = document.getElementById('newSoftLink').value;
-            const icon = document.getElementById('newSoftIcon').value || 'fa-laptop-code';
-            const description = document.getElementById('newSoftDesc').value;
-
-            const softwares = JSON.parse(localStorage.getItem('btx_softwares') || '[]');
-            softwares.unshift({
-                id: 'soft-' + Date.now(),
-                title,
-                category,
-                link,
-                icon,
-                description
-            });
-
-            localStorage.setItem('btx_softwares', JSON.stringify(softwares));
-            e.target.reset();
-            renderAdminSoftwaresTable();
-            renderPublicSoftwares();
-            showToast('Novo software adicionado com sucesso!');
-        }
-
-        function deleteSoftware(id) {
-            let softwares = JSON.parse(localStorage.getItem('btx_softwares') || '[]');
-            softwares = softwares.filter(s => s.id !== id);
-            localStorage.setItem('btx_softwares', JSON.stringify(softwares));
-            renderAdminSoftwaresTable();
-            renderPublicSoftwares();
-            showToast('Software removido.');
-        }
-
-        function renderAdminSoftwaresTable() {
-            const container = document.getElementById('adminSoftwaresTable');
-            const softwares = JSON.parse(localStorage.getItem('btx_softwares') || '[]');
-
-            container.innerHTML = softwares.map(s => `
-                <div class="p-3 rounded-xl bg-amazon-950 border border-amazon-800 flex items-center justify-between text-xs gap-4">
+        function renderArtigos(list) {
+            const container = document.getElementById('artigos-container');
+            container.innerHTML = list.map(item => `
+                <div class="card">
                     <div>
-                        <span class="font-bold text-slate-100">${s.title}</span>
-                        <span class="text-[10px] text-gold-400 ml-2">(${s.category})</span>
+                        <span class="card-category">${item.category}</span>
+                        <h3 class="card-title">${item.title}</h3>
+                        <p class="card-desc">${item.summary}</p>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <a href="${s.link}" target="_blank" class="text-xs text-emerald-400 hover:underline"><i class="fa-solid fa-link"></i> Abrir</a>
-                        <button onclick="deleteSoftware('${s.id}')" class="text-red-400 hover:text-red-300 ml-2">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </div>
+                    <a href="${item.link}" target="_blank" class="card-link">
+                        Ler Pesquisa Completa <i class="fa-solid fa-file-pdf"></i>
+                    </a>
                 </div>
             `).join('');
         }
 
-        function handleAddArticle(e) {
+        // Formulário de Contato
+        async function handleSendContact(e) {
             e.preventDefault();
-            const title = document.getElementById('newArtTitle').value;
-            const category = document.getElementById('newArtCategory').value;
-            const authors = document.getElementById('newArtAuthors').value;
-            const link = document.getElementById('newArtLink').value;
-            const abstract = document.getElementById('newArtAbstract').value;
+            const name = document.getElementById('contact-name').value;
+            const email = document.getElementById('contact-email').value;
+            const message = document.getElementById('contact-message').value;
 
-            const articles = JSON.parse(localStorage.getItem('btx_articles') || '[]');
-            articles.unshift({
-                id: 'art-' + Date.now(),
-                title,
-                category,
-                authors,
-                date: new Date().getFullYear().toString(),
-                link,
-                abstract
-            });
+            if (supabase) {
+                await supabase.from('mensagens').insert([{ name, email, message }]);
+            }
 
-            localStorage.setItem('btx_articles', JSON.stringify(articles));
+            alert('Obrigado pela mensagem! Entraremos em contato em breve.');
             e.target.reset();
-            renderAdminArticlesTable();
-            renderPublicArticles();
-            showToast('Artigo publicado com sucesso!');
         }
 
-        function deleteArticle(id) {
-            let articles = JSON.parse(localStorage.getItem('btx_articles') || '[]');
-            articles = articles.filter(a => a.id !== id);
-            localStorage.setItem('btx_articles', JSON.stringify(articles));
-            renderAdminArticlesTable();
-            renderPublicArticles();
-            showToast('Artigo removido.');
+        // Modal Admin & Autenticação
+        function openAdminModal() {
+            document.getElementById('adminModal').style.display = 'flex';
         }
 
-        function renderAdminArticlesTable() {
-            const container = document.getElementById('adminArticlesTable');
-            const articles = JSON.parse(localStorage.getItem('btx_articles') || '[]');
-
-            container.innerHTML = articles.map(a => `
-                <div class="p-3 rounded-xl bg-amazon-950 border border-amazon-800 flex items-center justify-between text-xs gap-4">
-                    <div>
-                        <span class="font-bold text-slate-100">${a.title}</span>
-                        <span class="text-[10px] text-emerald-400 ml-2">${a.category}</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <a href="${a.link}" target="_blank" class="text-xs text-gold-400 hover:underline"><i class="fa-solid fa-file-pdf"></i> PDF</a>
-                        <button onclick="deleteArticle('${a.id}')" class="text-red-400 hover:text-red-300 ml-2">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
+        function closeAdminModal() {
+            document.getElementById('adminModal').style.display = 'none';
         }
 
+        function handleAdminLogin() {
+            const email = document.getElementById('admin-email').value;
+            const pass = document.getElementById('admin-pass').value;
 
-        function openModal(id) {
-            document.getElementById(id).classList.remove('hidden');
+            if (email === 'btxsuportg@gmail.com' && pass === 'Nasc140@') {
+                document.getElementById('admin-login-step').style.display = 'none';
+                document.getElementById('admin-panel-step').style.display = 'block';
+            } else {
+                alert('Credenciais incorretas!');
+            }
         }
 
-        function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
+        // Cadastrar Software no Supabase
+        async function handleAddSoftware(e) {
+            e.preventDefault();
+            const title = document.getElementById('sw-title').value;
+            const category = document.getElementById('sw-category').value;
+            const description = document.getElementById('sw-desc').value;
+            const link = document.getElementById('sw-link').value;
+
+            if (supabase) {
+                const { error } = await supabase.from('softwares').insert([{ title, category, description, link }]);
+                if (error) {
+                    alert('Erro ao salvar no Supabase: ' + error.message);
+                } else {
+                    alert('Software cadastrado com sucesso!');
+                    fetchSoftwares();
+                    e.target.reset();
+                }
+            }
         }
 
-        function showToast(message) {
-            const toast = document.getElementById('toastNotification');
-            document.getElementById('toastText').textContent = message;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3500);
+        // Cadastrar Artigo no Supabase
+        async function handleAddArtigo(e) {
+            e.preventDefault();
+            const title = document.getElementById('art-title').value;
+            const category = document.getElementById('art-category').value;
+            const summary = document.getElementById('art-summary').value;
+            const link = document.getElementById('art-link').value;
+
+            if (supabase) {
+                const { error } = await supabase.from('artigos').insert([{ title, category, summary, link }]);
+                if (error) {
+                    alert('Erro ao salvar no Supabase: ' + error.message);
+                } else {
+                    alert('Artigo publicado com sucesso!');
+                    fetchArtigos();
+                    e.target.reset();
+                }
+            }
         }
-
-        // Mobile Menu Event Handler
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const menuIcon = document.getElementById('menuIcon');
-
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-            menuIcon.className = mobileMenu.classList.contains('hidden') ? 'fa-solid fa-bars' : 'fa-solid fa-xmark';
-        });
-
-        document.querySelectorAll('.mobile-link').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-                menuIcon.className = 'fa-solid fa-bars';
-            });
-        });
-
-        // Study Simulator logic
-        const simHours = document.getElementById('simHours');
-        const hoursVal = document.getElementById('hoursVal');
-        const calcPlanBtn = document.getElementById('calcPlanBtn');
-        const simResult = document.getElementById('simResult');
-
-        simHours.addEventListener('input', (e) => {
-            hoursVal.textContent = `${e.target.value} horas/dia`;
-        });
-
-        calcPlanBtn.addEventListener('click', () => {
-            const area = document.getElementById('simArea').value;
-            const hours = simHours.value;
-
-            let areaName = "Saúde Pública";
-            if(area === 'administrativo') areaName = "Gestão Pública";
-            if(area === 'educacao') areaName = "Educação";
-
-            simResult.innerHTML = `
-                <div class="p-4 rounded-xl bg-amazon-900 border border-gold-500/40 space-y-2 font-sans">
-                    <h5 class="font-bold text-gold-400 text-sm">Plano Otimizado para: ${areaName}</h5>
-                    <p class="text-xs text-slate-200">Meta: <strong>${hours} horas diárias</strong> de estudos inteligentes.</p>
-                    <ul class="list-disc list-inside text-[11px] text-slate-300 space-y-1">
-                        <li><strong>40% (${Math.round(hours*0.4*10)/10}h):</strong> Resolução de questões de concursos do Pará.</li>
-                        <li><strong>35% (${Math.round(hours*0.35*10)/10}h):</strong> Leitura de legislação específica municipal.</li>
-                        <li><strong>25% (${Math.round(hours*0.25*10)/10}h):</strong> Repetição Espaçada com BTX Flashcards.</li>
-                    </ul>
-                </div>
-            `;
-        });
-
-        // Initialize Public UI on page load
-        window.addEventListener('DOMContentLoaded', () => {
-            renderPublicSoftwares();
-            renderPublicArticles();
-            updateAdminNavUI();
-        });
     </script>
 </body>
 </html>
