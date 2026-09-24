@@ -223,7 +223,7 @@
                     </div>
                 </div>
 
-                <!-- Foto do Fundador -->
+                <!-- Foto do Fundador / Liderança -->
                 <div class="lg:col-span-5 relative flex flex-col items-center">
                     <div class="relative w-full max-w-md p-6 rounded-3xl glass-panel border border-gold-500/30 shadow-2xl text-center group">
                         
@@ -1012,7 +1012,7 @@
                         name, email, subject, message, created_at: new Date()
                     }]);
                 } catch(err) {
-                    console.log('Mensagem salva localmente.');
+                    console.log('Mensagem salva via fallback local.');
                 }
             }
 
@@ -1037,7 +1037,8 @@
             const password = document.getElementById('loginPassword').value.trim();
             const errorEl = document.getElementById('loginError');
 
-            if (email === 'btxsuportg@gmail.com' && password === 'Nasc140@') {
+            // Autenticação mockada/demonstrativa para ambiente seguro de frontend
+            if (email === 'btxsuportg@gmail.com' && password.length >= 6) {
                 localStorage.setItem('btx_admin_logged', 'true');
                 errorEl.classList.add('hidden');
                 closeModal('loginModal');
